@@ -1,0 +1,20 @@
+{
+  "heap": {
+    "objects": [
+      {
+        "name": "a",
+        "type": "Chain",
+        "config": {
+          "filters": []
+        }
+      },
+      {
+        "name": "b",
+        "type": "Chain",
+        "config": {
+          "filters": []
+        }
+      }
+    ]
+  }
+}

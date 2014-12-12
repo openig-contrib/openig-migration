@@ -1,0 +1,17 @@
+{
+  "heap": [
+    {
+      "name": "exception-filter",
+      "type": "ExceptionFilter",
+      "config": {
+        "handler": {
+          "name": "chain",
+          "type": "Chain",
+          "config": {
+            "filters": [ ]
+          }
+        }
+      }
+    }
+  ]
+}

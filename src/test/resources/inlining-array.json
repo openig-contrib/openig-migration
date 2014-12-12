@@ -1,0 +1,19 @@
+{
+  "heap": {
+    "objects": [
+      {
+        "name": "a",
+        "type": "Chain",
+        "config": {
+          "filters": [
+            "b"
+          ]
+        }
+      },
+      {
+        "name": "b",
+        "type": "CookieFilter"
+      }
+    ]
+  }
+}

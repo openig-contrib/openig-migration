@@ -1,0 +1,92 @@
+{
+  "heap": [
+    {
+      "name": "DispatchHandler",
+      "type": "DispatchHandler",
+      "config": {
+        "bindings": [
+          {
+            "condition": "${exchange.request.uri.path == '/eum/login'}",
+            "handler": {
+              "name": "LoginChain",
+              "type": "Chain",
+              "config": {
+                "filters": [
+                  {
+                    "name": "SwitchFilter",
+                    "type": "SwitchFilter",
+                    "config": {
+                      "onResponse": [
+                        {
+                          "handler": {
+                            "name": "LoginRequestHandler",
+                            "type": "Chain",
+                            "config": {
+                              "filters": [
+                                {
+                                  "name": "LoginRequest",
+                                  "type": "StaticRequestFilter",
+                                  "config": {
+                                    "method": "POST",
+                                    "uri": "https://TARGETIP/login",
+                                    "form": {
+                                      "USER": [
+                                        "myusername"
+                                      ],
+                                      "PASSWORD": [
+                                        "mypassword"
+                                      ]
+                                    },
+                                    "headers": {
+                                      "cookie": [
+                                        "${exchange.response.headers['Set-Cookie'][0]}"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ],
+                              "handler": "OutgoingChain"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "handler": "OutgoingChain"
+              }
+            },
+            "baseURI": "http://TARGETIP"
+          },
+          {
+            "handler": "OutgoingChain",
+            "baseURI": "http://TARGETIP"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OutgoingChain",
+      "type": "Chain",
+      "config": {
+        "filters": [
+          {
+            "name": "CaptureFilter",
+            "type": "CaptureFilter",
+            "config": {
+              "captureEntity": false,
+              "file": "/tmp/gateway.log"
+            }
+          }
+        ],
+        "handler": {
+          "name": "ClientHandler",
+          "comment": "Responsible for sending all requests to remote servers.",
+          "type": "ClientHandler",
+          "config": {}
+        }
+      }
+    }
+  ],
+  "handlerObject": "DispatchHandler"
+}

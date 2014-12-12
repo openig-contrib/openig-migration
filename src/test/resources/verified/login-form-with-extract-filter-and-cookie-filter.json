@@ -1,0 +1,125 @@
+{
+  "heap": [
+    {
+      "name": "DispatchHandler",
+      "type": "DispatchHandler",
+      "config": {
+        "bindings": [
+          {
+            "handler": {
+              "name": "FindLoginPageChain",
+              "type": "Chain",
+              "config": {
+                "filters": [
+                  {
+                    "name": "IsLoginPage",
+                    "type": "SwitchFilter",
+                    "config": {
+                      "onResponse": [
+                        {
+                          "condition": "${exchange.isLoginPage.found == 'true'}",
+                          "handler": {
+                            "name": "LoginChain",
+                            "type": "Chain",
+                            "config": {
+                              "filters": [
+                                {
+                                  "name": "LoginRequest",
+                                  "type": "StaticRequestFilter",
+                                  "config": {
+                                    "method": "POST",
+                                    "uri": "http://TARGETIP:PORT/openam/UI/Login",
+                                    "form": {
+                                      "IDToken0": [
+                                        ""
+                                      ],
+                                      "IDToken1": [
+                                        "USERNAME"
+                                      ],
+                                      "IDToken2": [
+                                        "PASSWORD"
+                                      ],
+                                      "IDButton": [
+                                        "Log+In"
+                                      ],
+                                      "encoded": [
+                                        "false"
+                                      ]
+                                    },
+                                    "headers": {
+                                      "host": [
+                                        "TARGETFQDN:PORT"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ],
+                              "handler": "OutgoingChain"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "FindLoginPage",
+                    "type": "EntityExtractFilter",
+                    "config": {
+                      "messageType": "response",
+                      "target": "${exchange.isLoginPage}",
+                      "bindings": [
+                        {
+                          "key": "found",
+                          "pattern": "OpenAM\\s\\(Login\\)",
+                          "template": "true"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "handler": "OutgoingChain"
+              }
+            },
+            "baseURI": "http://TARGETIP:PORT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OutgoingChain",
+      "type": "Chain",
+      "config": {
+        "filters": [
+          {
+            "name": "CookieFilter",
+            "type": "CookieFilter",
+            "config": {}
+          },
+          {
+            "name": "CaptureFilter",
+            "type": "CaptureFilter",
+            "config": {
+              "captureEntity": true,
+              "file": "/tmp/gateway.log"
+            }
+          }
+        ],
+        "handler": {
+          "name": "ClientHandler",
+          "comment": "Responsible for sending all requests to remote servers.",
+          "type": "ClientHandler",
+          "config": {}
+        }
+      }
+    },
+    {
+      "name": "LogSink",
+      "comment": "Default sink for logging information.",
+      "type": "ConsoleLogSink",
+      "config": {
+        "level": "DEBUG"
+      }
+    }
+  ],
+  "handlerObject": "DispatchHandler"
+}

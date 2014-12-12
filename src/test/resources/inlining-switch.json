@@ -1,0 +1,46 @@
+{
+  "heap": [
+    {
+      "name": "chain-1",
+      "type": "Chain",
+      "config": {
+        "filters": [ ]
+      }
+    },
+    {
+      "name": "chain-2",
+      "type": "Chain",
+      "config": {
+        "filters": [ ]
+      }
+    },
+    {
+      "name": "chain-3",
+      "type": "Chain",
+      "config": {
+        "filters": [ ]
+      }
+    },
+    {
+      "name": "switch",
+      "type": "SwitchFilter",
+      "config": {
+        "onRequest": [
+          {
+            "condition": "${exchange not null}",
+            "handler": "chain-1"
+          },
+          {
+            "handler": "chain-2"
+          }
+        ],
+        "onResponse": [
+          {
+            "condition": "${exchange null}",
+            "handler": "chain-3"
+          }
+        ]
+      }
+    }
+  ]
+}
