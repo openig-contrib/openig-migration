@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.forgerock.openig.migrate.action.EmptyConfigRemovalAction;
 import org.forgerock.openig.migrate.action.HeapObjectsSimplificationAction;
 import org.forgerock.openig.migrate.action.InlineDeclarationsAction;
 
@@ -68,6 +69,7 @@ public class Main {
     private List<Action> loadActions() {
         List<Action> actions = new ArrayList<>();
         actions.add(new HeapObjectsSimplificationAction());
+        actions.add(new EmptyConfigRemovalAction());
         actions.add(new InlineDeclarationsAction());
         return actions;
     }

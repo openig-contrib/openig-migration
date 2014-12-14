@@ -31,6 +31,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class NodeTraversal {
 
     public void traverse(JsonNode node, NodeVisitor visitor) {
+        if (node == null) {
+            return;
+        }
         traverse(node, compile(null), visitor);
     }
 

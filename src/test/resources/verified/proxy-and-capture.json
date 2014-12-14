@@ -46,8 +46,7 @@
         "handler": {
           "name": "ClientHandler",
           "comment": "Sends all requests to remote servers.",
-          "type": "ClientHandler",
-          "config": {}
+          "type": "ClientHandler"
         }
       }
     }
