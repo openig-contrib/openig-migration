@@ -1,6 +1,8 @@
 ForgeRock OpenIG Migration Tool
 ===================================
 
+[![Build Status](https://travis-ci.org/sauthieg/openig-migration.svg)](https://travis-ci.org/sauthieg/openig-migration)
+
 This simple command line project aims to ease the migration of OpenIG 3.0 configuration files to OpenIG 3.1.
 
 It requires Java 8 to compile and run.
