@@ -1,0 +1,12 @@
+{
+  "heap": [
+    {
+      "name": "chain",
+      "type": "Chain",
+      "config": {
+        "filters": [ ]
+      }
+    }
+  ],
+  "handler": "Chain"
+}

@@ -21,3 +21,4 @@ Supported actions
 * Heap object declaration inline (when possible)
 * Remove `"config": {}` (empty element)
 * Rename `RedirectFilter` to `LocationHeaderFilter`
+* Rename `handlerObject` to `handler`

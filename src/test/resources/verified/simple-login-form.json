@@ -63,5 +63,5 @@
       }
     }
   ],
-  "handlerObject": "DispatchHandler"
+  "handler": "DispatchHandler"
 }
