@@ -1,0 +1,8 @@
+{
+  "heap": [
+    {
+      "name": "redirect",
+      "type": "LocationHeaderFilter"
+    }
+  ]
+}

@@ -17,6 +17,7 @@ This tool write the migrated JSON on `System.out`
 Supported actions
 ------------------------
 
-* `heap/objects` array has been simplifed to just `heap`
-* Heap object declaration inlining (when possible)
+* `heap/objects` array has been simplified to just `heap`
+* Heap object declaration inline (when possible)
 * Remove `"config": {}` (empty element)
+* Rename `RedirectFilter` to `LocationHeaderFilter`

@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.forgerock.openig.migrate.action.EmptyConfigRemovalAction;
 import org.forgerock.openig.migrate.action.HeapObjectsSimplificationAction;
 import org.forgerock.openig.migrate.action.InlineDeclarationsAction;
+import org.forgerock.openig.migrate.action.ObjectTypeRenameAction;
 
 /**
  * Created by guillaume on 23/11/14.
@@ -70,6 +71,7 @@ public class Main {
         List<Action> actions = new ArrayList<>();
         actions.add(new HeapObjectsSimplificationAction());
         actions.add(new EmptyConfigRemovalAction());
+        actions.add(new ObjectTypeRenameAction("RedirectFilter", "LocationHeaderFilter"));
         actions.add(new InlineDeclarationsAction());
         return actions;
     }
