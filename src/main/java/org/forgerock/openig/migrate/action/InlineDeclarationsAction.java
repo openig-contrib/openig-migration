@@ -23,8 +23,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.forgerock.openig.migrate.Action;
-import org.forgerock.openig.migrate.action.model.ModelBuilder;
 import org.forgerock.openig.migrate.action.model.ObjectModel;
 import org.forgerock.openig.migrate.action.model.Reference;
 import org.forgerock.openig.migrate.action.model.RouteModel;
@@ -39,12 +37,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Created by guillaume on 23/11/14.
  */
-public class InlineDeclarationsAction implements Action {
-    @Override
-    public ObjectNode migrate(final ObjectNode configuration) {
+public class InlineDeclarationsAction extends AbstractRouteModelAction {
 
-        // Create object models
-        RouteModel route = new ModelBuilder().buildRoute(configuration);
+    @Override
+    protected ObjectNode doMigrate(final RouteModel route, final ObjectNode configuration) {
+
         ArrayNode heap = (ArrayNode) configuration.get("heap");
 
         // Creates references
@@ -141,7 +138,6 @@ public class InlineDeclarationsAction implements Action {
     private void bindReference(ObjectModel source, ObjectModel target, JsonPointer pointer) {
         if (target != null) {
             Reference ref = new Reference(source, target, pointer);
-            // TODO Consider giving the JSON pointer or the node that supports the reference
             source.addReferenceTo(ref);
             target.addReferencedBy(ref);
         }
