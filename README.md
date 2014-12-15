@@ -22,3 +22,4 @@ Supported actions
 * Remove `"config": {}` (empty element)
 * Rename `RedirectFilter` to `LocationHeaderFilter`
 * Rename `handlerObject` to `handler`
+* Rename `OAuth2ResourceServerFilter` deprecated attributes to new names

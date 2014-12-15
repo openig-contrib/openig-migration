@@ -19,7 +19,9 @@ package org.forgerock.openig.migrate;
 import java.io.File;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -28,6 +30,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.forgerock.openig.migrate.action.DeprecatedAttributesAction;
 import org.forgerock.openig.migrate.action.EmptyConfigRemovalAction;
 import org.forgerock.openig.migrate.action.HandlerObjectAction;
 import org.forgerock.openig.migrate.action.HeapObjectsSimplificationAction;
@@ -73,9 +76,20 @@ public class Main {
         actions.add(new HeapObjectsSimplificationAction());
         actions.add(new EmptyConfigRemovalAction());
         actions.add(new ObjectTypeRenameAction("RedirectFilter", "LocationHeaderFilter"));
+        actions.add(buildDeprecatedAttributes());
         actions.add(new InlineDeclarationsAction());
         actions.add(new HandlerObjectAction());
         return actions;
+    }
+
+    private Action buildDeprecatedAttributes() {
+        DeprecatedAttributesAction action = new DeprecatedAttributesAction();
+        Map<String, String> rs = new HashMap<>();
+        rs.put("enforceHttps", "requireHttps");
+        rs.put("httpHandler", "providerHandler");
+        rs.put("requiredScopes", "scopes");
+        action.addDeprecatedReplacement("OAuth2ResourceServerFilter", rs);
+        return action;
     }
 
     public void setSources(final List<String> sources) {

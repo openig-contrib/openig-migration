@@ -1,0 +1,13 @@
+{
+  "heap": [
+    {
+      "name": "rs",
+      "type": "OAuth2ResourceServerFilter",
+      "config": {
+        "enforceHttps": true,
+        "httpHandler": "ClientHandler",
+        "requiredScopes": [ "profile" ]
+      }
+    }
+  ]
+}
