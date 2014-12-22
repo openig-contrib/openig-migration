@@ -17,18 +17,13 @@
 package org.forgerock.openig.migrate;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.forgerock.openig.migrate.action.DeprecatedAttributesAction;
 import org.forgerock.openig.migrate.action.EmptyConfigRemovalAction;
@@ -36,6 +31,15 @@ import org.forgerock.openig.migrate.action.HandlerObjectAction;
 import org.forgerock.openig.migrate.action.HeapObjectsSimplificationAction;
 import org.forgerock.openig.migrate.action.InlineDeclarationsAction;
 import org.forgerock.openig.migrate.action.ObjectTypeRenameAction;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Created by guillaume on 23/11/14.
@@ -53,18 +57,29 @@ public class Main {
 
     void execute(OutputStream stream) throws Exception {
 
+        // Pre-parse the original files with JSON-Simple parser (which is more lenient than Jackson's one)
+        File source = new File(sources.get(0));
+        JSONParser parser = new JSONParser();
+        JSONObject object = (JSONObject) parser.parse(new FileReader(source));
+
+        // Then serialize again the structure (should clean up the JSON)
+        StringWriter writer = new StringWriter();
+        object.writeJSONString(writer);
+
+        // Load migration actions to apply in order
         List<Action> actions = loadActions();
 
+        // Parse the cleaned-up content with Jackson this time
         JsonFactory factory = new JsonFactory();
-
         ObjectMapper mapper = new ObjectMapper();
-        //mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        ObjectNode node = (ObjectNode) mapper.readTree(new File(sources.get(0)));
+        ObjectNode node = (ObjectNode) mapper.readTree(writer.toString());
 
+        // Apply migration actions
         for (Action action : actions) {
             node = action.migrate(node);
         }
 
+        // Serialize the migrated content on the given stream (with pretty printer)
         DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
         prettyPrinter.indentArraysWith(DefaultPrettyPrinter.Lf2SpacesIndenter.instance);
         mapper.writeTree(factory.createGenerator(stream).setPrettyPrinter(prettyPrinter),

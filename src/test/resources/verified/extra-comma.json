@@ -1,0 +1,55 @@
+{
+  "heap": [
+    {
+      "name": "HandlerServlet",
+      "type": "HandlerServlet",
+      "config": {
+        "handler": "DispatchHandler",
+        "baseURI":"http://109.73.67.52:8080"
+      }
+    },
+    {
+      "name": "DispatchHandler",
+      "type": "DispatchHandler",
+      "config": {
+        "bindings": [
+          {
+            "condition": "${exchange.request.uri.path == '/wordpress/wp-login.php'}",
+            "handler": {
+              "name": "LoginChain",
+              "type": "Chain",
+              "config": {
+                "filters": [
+                  {
+                    "name": "LoginRequestFilter",
+                    "type": "StaticRequestFilter",
+                    "config": {
+                      "method": "POST",
+                      "uri": "http://109.73.67.52:8080/wordpress/wp-login.php",
+                      "form": {
+                        "log": ["george"],
+                        "pwd": ["costanza"],
+                        "rememberme": ["forever"],
+                        "redirect_to" : ["http://demo.forgerock.com:8080/wordpress/wp-admin/"],
+                        "testcookie": ["1"]
+                      }
+                    }
+                  }
+                ],
+                "handler": "ClientHandler"
+              }
+            }
+          },
+          {
+            "handler": "ClientHandler"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ClientHandler",
+      "type": "ClientHandler"
+    }
+  ],
+  "servletObject": "HandlerServlet"
+}
