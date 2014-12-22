@@ -75,7 +75,7 @@ public class MigrationToolTest {
 
     }
 
-    private String toString(final File expected) throws IOException {
+    private static String toString(final File expected) throws IOException {
         return new String(Files.readAllBytes(expected.toPath()));
     }
 
