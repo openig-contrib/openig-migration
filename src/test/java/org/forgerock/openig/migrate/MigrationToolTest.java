@@ -53,13 +53,12 @@ public class MigrationToolTest {
     }
 
     @DataProvider
-    public Object[][] resources2() throws Exception {
-
+    public Object[][] onlyOneResource() throws Exception {
+        String filename = "simple-login-form.json";
         File resources = new File("src/test/resources");
         File verified = new File(resources, "verified");
-
         return new Object[][] {
-                {new File(resources, "simple-login-form.json"), new File(verified, "simple-login-form.json")}
+                { new File(resources, filename), new File(verified, filename) }
         };
     }
 
